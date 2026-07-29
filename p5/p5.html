@@ -1,15 +1,15 @@
 <!doctype html>
-<html ng-app>
+<html ng-app="Prac-2">
   <head>
     <title>Angular js example</title>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
   </head>
   <body>
-    <div ng-controller=""MyController>
+    <div ng-controller="MyController">
       <h2>{{message|uppercase}}</h2>
     </div>
     <script>
-      var app = angular.module("Prac-2",[])
+      var app = angular.module("Prac-2",[]);
       app.controller("MyController",function($scope){
         $scope.message = "This is Excercise";
       });

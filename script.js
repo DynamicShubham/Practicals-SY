@@ -2,9 +2,10 @@
    CONFIG — fill in your GitHub details once, every link builds itself
    ========================================================================== */
 const CONFIG = {
-  githubUser: "DynamicShubham", // <-- change this to your GitHub username
-  repoName:   "Practicals-SY",        // <-- repo name (matches Practicals-SY-main.zip)
+  githubUser: "DynamicShubham",              // <-- change this to your GitHub username
+  repoName:   "Practicals-SY",                      // <-- repo name (matches Practicals-SY-main.zip)
   branch:     "main",
+  vercelUrl:  "https://practicals-sy.vercel.app",   // <-- live deployment, used for "Open Live Output"
 };
 
 /** Link to a file on GitHub (the "blob" viewer) — used for Notes + Source Code */
@@ -12,9 +13,9 @@ function githubBlobUrl(path){
   return `https://github.com/${CONFIG.githubUser}/${CONFIG.repoName}/blob/${CONFIG.branch}/${path}`;
 }
 
-/** Link to the same file served live via GitHub Pages — used for Live Output */
-function githubPagesUrl(path){
-  return `https://${CONFIG.githubUser}.github.io/${CONFIG.repoName}/${path}`;
+/** Link to the same file served live via Vercel — used for Live Output */
+function vercelUrl(path){
+  return `${CONFIG.vercelUrl}/${path}`;
 }
 
 /* ==========================================================================
@@ -37,7 +38,7 @@ function getLinks(p){
   return {
     notes:  githubBlobUrl(`${p.folder}/${notesFile}`),
     code:   githubBlobUrl(`${p.folder}/${p.file}`),
-    output: githubPagesUrl(`${p.folder}/${p.file}`),
+    output: vercelUrl(`${p.folder}/${p.file}`),
   };
 }
 

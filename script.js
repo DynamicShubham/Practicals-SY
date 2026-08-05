@@ -1,16 +1,45 @@
 /* ==========================================================================
-   DATA — every practical lives here, cards & panel are built from this array
+   CONFIG — fill in your GitHub details once, every link builds itself
+   ========================================================================== */
+const CONFIG = {
+  githubUser: "DynamicShubham", // <-- change this to your GitHub username
+  repoName:   "Practicals-SY",        // <-- repo name (matches Practicals-SY-main.zip)
+  branch:     "main",
+};
+
+/** Link to a file on GitHub (the "blob" viewer) — used for Notes + Source Code */
+function githubBlobUrl(path){
+  return `https://github.com/${CONFIG.githubUser}/${CONFIG.repoName}/blob/${CONFIG.branch}/${path}`;
+}
+
+/** Link to the same file served live via GitHub Pages — used for Live Output */
+function githubPagesUrl(path){
+  return `https://${CONFIG.githubUser}.github.io/${CONFIG.repoName}/${path}`;
+}
+
+/* ==========================================================================
+   DATA — every practical lives here, cards & panel are built from this array.
+   `file` defaults to "p{n}.html" — override it per-item when a folder uses a
+   different filename (e.g. P5's folder ships "excercise.html").
    ========================================================================== */
 const practicals = [
-  { id:"P1", title:"Introduction to the Web", description:"How browsers, servers and the internet fit together.", status:"Completed", notes:"#", code:"#", output:"#", color:"var(--yellow)" },
-  { id:"P2", title:"HTML Structures",         description:"Semantic markup, forms and accessible document structure.", status:"Completed", notes:"#", code:"#", output:"#", color:"var(--blue)" },
-  { id:"P3", title:"CSS Styling",             description:"Selectors, the box model and building consistent layouts.", status:"Completed", notes:"#", code:"#", output:"#", color:"var(--pink)" },
-  { id:"P4", title:"Responsive Layouts",      description:"Flexbox, grid and design that adapts across devices.", status:"Completed", notes:"#", code:"#", output:"#", color:"var(--green)" },
-  { id:"P5", title:"JavaScript Basics",       description:"Variables, functions and control flow in the browser.", status:"Completed", notes:"#", code:"#", output:"#", color:"var(--orange)" },
-  { id:"P6", title:"DOM & Events",            description:"Reading, updating and reacting to the live page.", status:"Completed", notes:"#", code:"#", output:"#", color:"var(--violet)" },
-  { id:"P7", title:"Forms & Validation",      description:"Collecting input and validating it before it's sent.", status:"Completed", notes:"#", code:"#", output:"#", color:"var(--cyan)" },
-  { id:"P8", title:"PHP & Backends",          description:"Server-side logic, requests and simple data handling.", status:"Completed", notes:"#", code:"#", output:"#", color:"var(--yellow)" },
+  { id:"P1", folder:"p1", file:"p1.html",        title:"AngularJS Expressions & Data Binding", description:"A text input two-way bound to a live \u2018Hello\u2019 greeting.", status:"Completed",   color:"var(--yellow)" },
+  { id:"P2", folder:"p2", file:"p2.html",        title:"Practical 2",                          description:"Notes and code coming soon.",                              status:"In Progress", color:"var(--blue)"   },
+  { id:"P3", folder:"p3", file:"p3.html",        title:"Practical 3",                          description:"Notes and code coming soon.",                              status:"In Progress", color:"var(--pink)"   },
+  { id:"P4", folder:"p4", file:"p4.html",        title:"Two-Way Data Binding",                 description:"A controller value bound live to an input field.",         status:"Completed",   color:"var(--green)"  },
+  { id:"P5", folder:"p5", file:"excercise.html", title:"AngularJS Filters",                    description:"Formatting output with uppercase, currency, date and number filters.", status:"Completed", color:"var(--orange)" },
+  { id:"P6", folder:"p6", file:"p6.html",        title:"Directives & Filters",                 description:"ng-repeat, ng-show / ng-hide and filters for dynamic lists.", status:"Completed",   color:"var(--violet)" },
 ];
+
+/** Derive the three redirect links for a practical from its folder/file. */
+function getLinks(p){
+  const notesFile = `${p.folder}notes.md`; // e.g. p1/p1notes.md
+  return {
+    notes:  githubBlobUrl(`${p.folder}/${notesFile}`),
+    code:   githubBlobUrl(`${p.folder}/${p.file}`),
+    output: githubPagesUrl(`${p.folder}/${p.file}`),
+  };
+}
 
 /* Fixed, deterministic tilt per card so re-renders stay stable */
 const rotations = [-2, 1.5, -1, 2, -1.5, 1, -2.5, 1.5];
@@ -44,6 +73,7 @@ function renderGrid(list){
 
   list.forEach((p) => {
     const originalIndex = practicals.indexOf(p);
+    const statusClass = p.status === "Completed" ? "badge-done" : "badge-progress";
     const card = document.createElement("article");
     card.className = "card";
     card.style.setProperty("--accent", p.color);
@@ -57,7 +87,7 @@ function renderGrid(list){
       <div class="card-accent-bar"></div>
       <div class="card-top">
         <div class="card-number">${p.id}</div>
-        <span class="badge">${p.status}</span>
+        <span class="badge ${statusClass}">${p.status}</span>
       </div>
       <h3 class="card-title">${p.title}</h3>
       <p class="card-desc">${p.description}</p>
@@ -77,26 +107,29 @@ function renderGrid(list){
    RENDER: detail panel
    ========================================================================== */
 function openPanel(p){
+  const links = getLinks(p);
+  const statusClass = p.status === "Completed" ? "badge-done" : "badge-progress";
+
   panelEl.style.setProperty("--accent", p.color);
   panelEl.innerHTML = `
     <div class="panel-window-bar">
       <div class="window-dots"><span></span><span></span><span></span></div>
-      <span class="panel-path">practicals / ${p.id.toLowerCase()}.html</span>
+      <span class="panel-path">${p.folder} / ${p.file}</span>
       <button class="panel-close" id="panelCloseBtn" aria-label="Close panel">✕</button>
     </div>
     <div class="panel-body">
       <div class="panel-ghost-number" aria-hidden="true">${p.id}</div>
-      <span class="panel-badge">${p.status}</span>
+      <span class="panel-badge ${statusClass}">${p.status}</span>
       <h2 class="panel-title">${p.id} — ${p.title}</h2>
       <p class="panel-desc">${p.description}</p>
       <div class="panel-actions">
-        <a class="action-btn" href="${p.notes}" target="_blank" rel="noopener">
+        <a class="action-btn" href="${links.notes}" target="_blank" rel="noopener">
           <span class="icon">📄</span> View Notes <span class="arrow">↗</span>
         </a>
-        <a class="action-btn" href="${p.code}" target="_blank" rel="noopener">
+        <a class="action-btn" href="${links.code}" target="_blank" rel="noopener">
           <span class="icon">💻</span> View Source Code <span class="arrow">↗</span>
         </a>
-        <a class="action-btn" href="${p.output}" target="_blank" rel="noopener">
+        <a class="action-btn" href="${links.output}" target="_blank" rel="noopener">
           <span class="icon">🚀</span> Open Live Output <span class="arrow">↗</span>
         </a>
       </div>

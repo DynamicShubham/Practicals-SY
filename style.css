@@ -390,6 +390,10 @@ h1.title .dot{ color: var(--pink); }
   white-space: nowrap;
 }
 .badge::before{ content: "✓"; color: var(--green); font-weight: 700; }
+.badge-progress{ background: var(--paper); color: var(--ink); border: 2px solid var(--ink); }
+.badge-progress::before{ content: "◐"; color: var(--orange); }
+.panel-badge.badge-progress{ background: var(--paper); }
+
 .card-title{
   font-family: var(--font-display);
   font-weight: 700;

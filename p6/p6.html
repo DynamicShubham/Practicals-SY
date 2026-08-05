@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Angular Js Directives and filters</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+</head>
+
+<body ng-app="" ng-init=" admissionDate='2025-07-15' course='B.SC.IT' students=['Harsh','Ravi','Ravisha','Priya']">
+    <h2>Angular js directives and filters</h2>
+    <hr>
+    <h3>Student name </h3>
+    Enter name :
+    <input type="text" ng-model="name">
+    <br>
+    <b>Your name is : </b>
+    <h3 ng-bind="Name"></h3>
+    <hr>
+    <h3>Student information</h3>
+    <input type="checkbox" ng-model="Show Student">
+    Display student
+    <br><br>
+    <div ng-show="showStudent">
+        Name:
+        {{name|uppercase}}
+        <br><br>
+        Roll no : 36
+        <br><br>
+        Marks: 95
+        <br><br>
+        Admission date : {{admissionDate|date:'dd/MM/yyyy'}}
+    </div>
+    <h3>Hide Student information</h3>
+    <input type="checkbox" ng-model="hideStudent">
+    Hide STUDENT Details
+    <br><br>
+    <div ng-hide="hideStudent">
+        <b>Student Status : </b> Active <br>
+        <b>Department : </b> Information Technology <br>
+        <b>Semester : </b> I <br>
+    </div>
+    <hr>
+    <h3>Student list</h3>
+    <ul>
+        <li ng-repeat="student in students">
+            {{student}}
+        </li>
+    </ul>
+    <p>
+        <b>Total Students :</b>
+        {{students.length}}
+    </p>
+</body>
+</html>
